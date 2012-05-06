@@ -1,4 +1,4 @@
-import statsd.StatsdPoolFactory
+import grails.plugin.statsd.StatsdPoolFactory
 import org.apache.commons.pool.impl.GenericObjectPool
 
 class GrailsStatsdGrailsPlugin {

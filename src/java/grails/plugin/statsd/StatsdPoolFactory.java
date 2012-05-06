@@ -1,4 +1,4 @@
-package statsd;
+package grails.plugin.statsd;
 
 import org.apache.commons.pool.PoolableObjectFactory;
 

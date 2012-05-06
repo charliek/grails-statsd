@@ -1,4 +1,4 @@
-package statsd;
+package grails.plugin.statsd;
 
 /**
  * StatsdClient.java
@@ -64,67 +64,7 @@ public class StatsdClient {
         _channel.close();
     }
 
-    public boolean timing(String key, int value) {
-        return timing(key, value, 1.0);
-    }
-
-    public boolean timing(String key, int value, double sampleRate) {
-        return send(sampleRate, String.format("%s:%d|ms", key, value));
-    }
-
-    public boolean decrement(String key) {
-        return increment(key, -1, 1.0);
-    }
-
-    public boolean decrement(String key, int magnitude) {
-        return decrement(key, magnitude, 1.0);
-    }
-
-    public boolean decrement(String key, int magnitude, double sampleRate) {
-        magnitude = magnitude < 0 ? magnitude : -magnitude;
-        return increment(key, magnitude, sampleRate);
-    }
-
-    public boolean decrement(String... keys) {
-        return increment(-1, 1.0, keys);
-    }
-
-    public boolean decrement(int magnitude, String... keys) {
-        magnitude = magnitude < 0 ? magnitude : -magnitude;
-        return increment(magnitude, 1.0, keys);
-    }
-
-    public boolean decrement(int magnitude, double sampleRate, String... keys) {
-        magnitude = magnitude < 0 ? magnitude : -magnitude;
-        return increment(magnitude, sampleRate, keys);
-    }
-
-    public boolean increment(String key) {
-        return increment(key, 1, 1.0);
-    }
-
-    public boolean increment(String key, int magnitude) {
-        return increment(key, magnitude, 1.0);
-    }
-
-    public boolean increment(String key, int magnitude, double sampleRate) {
-        String stat = String.format("%s:%s|c", key, magnitude);
-        return send(stat, sampleRate);
-    }
-
-    public boolean increment(int magnitude, double sampleRate, String... keys) {
-        String[] stats = new String[keys.length];
-        for (int i = 0; i < keys.length; i++) {
-            stats[i] = String.format("%s:%s|c", keys[i], magnitude);
-        }
-        return send(sampleRate, stats);
-    }
-
-    private boolean send(String stat, double sampleRate) {
-        return send(sampleRate, stat);
-    }
-
-    private boolean send(double sampleRate, String... stats) {
+    public boolean send(double sampleRate, String... stats) {
 
         boolean retval = false; // didn't send anything
         if (sampleRate < 1.0) {
@@ -148,7 +88,6 @@ public class StatsdClient {
     }
 
     private boolean doSend(final String stat) {
-        System.out.println(stat);
         try {
             final byte[] data = stat.getBytes("utf-8");
             final ByteBuffer buff = ByteBuffer.wrap(data);

@@ -13,12 +13,13 @@ grails.project.dependency.resolution = {
     log "warn" // log level of Ivy resolver, either 'error', 'warn', 'info', 'debug' or 'verbose'
     repositories {
         grailsCentral()
-        //mavenCentral()
+        mavenCentral()
         //mavenLocal()
         //mavenRepo "http://repository.codehaus.org"
     }
     dependencies {
-        // runtime 'mysql:mysql-connector-java:5.1.5'
+        test 'org.gmock:gmock:0.8.0'
+        test 'org.hamcrest:hamcrest-library:1.1' // Optionally, you can use hamcrest matchers
     }
 
     plugins {

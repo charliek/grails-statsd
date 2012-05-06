@@ -1,11 +1,8 @@
 package grails.plugin.statsd
 
-import statsd.StatsdClient
-import org.apache.commons.pool.impl.GenericObjectPool
-
 class StatsdService {
 
-    GenericObjectPool statsdPool
+    def statsdPool
 
     private void withClient(Closure closure) {
         StatsdClient client = (StatsdClient) statsdPool.borrowObject()
@@ -13,13 +10,6 @@ class StatsdService {
             closure.call(client)
         } finally {
             statsdPool.returnObject(client)
-        }
-    }
-
-    public void increment(String metric) {
-        log.debug("counting ${metric}")
-        withClient { client ->
-            client.increment(metric)
         }
     }
 
@@ -33,17 +23,46 @@ class StatsdService {
         def result = closure()
         long finishTime = System.currentTimeMillis()
         long runTime = finishTime - startTime
-        withClient { client ->
-            client.timing(key, runTime.toInteger(), sampleRate)
-        }
+        timing(key, runTime.toInteger(), sampleRate)
         log.debug("End timer : ${key} : ${runTime}ms")
         return result
     }
 
-    def methodMissing(String name, args) {
-        log.debug "methodMissing $name"
+    public void timing(String key, int value) {
+        timing(key, value, 1.0)
+    }
+
+    public void timing(String key, int value, double sampleRate) {
         withClient { client ->
-            client.invokeMethod(name, args)
+            client.send(sampleRate, String.format("%s:%d|ms", key, value));
+        }
+    }
+
+    public void decrement(String key) {
+        increment(key, -1, 1.0)
+    }
+
+    public void decrement(String key, int magnitude) {
+        decrement(key, magnitude, 1.0)
+    }
+
+    public void decrement(String key, int magnitude, double sampleRate) {
+        magnitude = magnitude < 0 ? magnitude : -magnitude
+        increment(key, magnitude, sampleRate)
+    }
+
+    public void increment(String key) {
+        increment(key, 1, 1.0);
+    }
+
+    public void increment(String key, int magnitude) {
+        increment(key, magnitude, 1.0)
+    }
+
+    public void increment(String key, int magnitude, double sampleRate) {
+        String stat = String.format("%s:%s|c", key, magnitude);
+        withClient { client ->
+            client.send(sampleRate, stat);
         }
     }
 
