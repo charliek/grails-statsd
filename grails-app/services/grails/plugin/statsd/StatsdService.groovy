@@ -3,6 +3,7 @@ package grails.plugin.statsd
 class StatsdService {
 
     def statsdPool
+    def statsdTimingService
 
     private void withClient(Closure closure) {
         StatsdClient client = (StatsdClient) statsdPool.borrowObject()
@@ -19,9 +20,9 @@ class StatsdService {
 
     public def withTimer(String key, double sampleRate, Closure closure) {
         log.debug("Start timer : ${key}")
-        long startTime = System.currentTimeMillis()
+        long startTime = statsdTimingService.currentTimeMillis()
         def result = closure()
-        long finishTime = System.currentTimeMillis()
+        long finishTime = statsdTimingService.currentTimeMillis()
         long runTime = finishTime - startTime
         timing(key, runTime.toInteger(), sampleRate)
         log.debug("End timer : ${key} : ${runTime}ms")

@@ -4,17 +4,17 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 
+import grails.plugin.statsd.test.IntegrationTestUDPServer
+
 class StatsdServiceIntegrationTests extends GroovyTestCase {
 
     def statsdService
-    SimpleUDPServer server
+    IntegrationTestUDPServer server
 
     @Before
     public void setup() {
-        server = new SimpleUDPServer()
-        Thread.start {
-            server.start()
-        }
+        server = new IntegrationTestUDPServer()
+        server.start()
     }
 
     @After

@@ -1,21 +1,19 @@
-package statsd
+package grails.plugin.statsd
 
 import grails.test.mixin.*
 
-import grails.plugin.statsd.StatsdService
 import org.junit.Test
 import org.junit.Before
 import org.gmock.GMockTestCase
 import org.apache.commons.pool.ObjectPool
-import grails.plugin.statsd.StatsdClient
 
 @TestFor(StatsdService)
 class StatsdServiceTests extends GMockTestCase {
 
     StatsdService service
+    StatsdTimingService timingService
     def pool
     def client
-
 
     @Before
     void setup() {
@@ -23,6 +21,7 @@ class StatsdServiceTests extends GMockTestCase {
         // Using gmock because mockFor does not support classes with constructors
         pool = mock(ObjectPool)
         client = mock(StatsdClient)
+        timingService = mock(StatsdTimingService)
     }
 
     private void runTestWithPool(Closure closure) {
@@ -37,8 +36,11 @@ class StatsdServiceTests extends GMockTestCase {
     @Test
     public void testTimingClosureWithDefaults() {
         String metric = 'test234'
-        client.send(1.0, "${metric}:0|ms")
+        timingService.currentTimeMillis().returns(5)
+        timingService.currentTimeMillis().returns(12)
+        client.send(1.0, "${metric}:7|ms")
         runTestWithPool {
+            service.statsdTimingService = timingService
             def value = service.withTimer(metric) {
                 1+1
             }
@@ -50,8 +52,11 @@ class StatsdServiceTests extends GMockTestCase {
     public void testTimingClosure() {
         String metric = 'test234'
         double sampling = 0.8
-        client.send(0.8, "${metric}:0|ms")
+        timingService.currentTimeMillis().returns(2)
+        timingService.currentTimeMillis().returns(4)
+        client.send(0.8, "${metric}:2|ms")
         runTestWithPool {
+            service.statsdTimingService = timingService
             def h = 'hello'
             def w = "world"
             def value = service.withTimer(metric, sampling) {
@@ -91,7 +96,6 @@ class StatsdServiceTests extends GMockTestCase {
         }
     }
 
-
     @Test
     public void testDecrementWithDefaultSampling() {
         String metric = 'test'
@@ -121,7 +125,6 @@ class StatsdServiceTests extends GMockTestCase {
             service.increment(metric)
         }
     }
-
 
     @Test
     public void testIncrementWithDefaultSampling() {
