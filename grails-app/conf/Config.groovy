@@ -21,13 +21,11 @@ log4j = {
            'net.sf.ehcache.hibernate'
 
     warn   'org.mortbay.log'
+}
 
-    grails {
-        statsd {
-            host = "127.0.0.1"
-            port = 8125
-        }
+grails {
+    statsd {
+        host = "127.0.0.1"
+        port = 8125
     }
-
-
 }
