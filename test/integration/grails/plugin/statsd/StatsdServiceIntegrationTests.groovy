@@ -10,6 +10,7 @@ class StatsdServiceIntegrationTests extends GroovyTestCase {
 
     def statsdService
     IntegrationTestUDPServer server
+    private static final long SLEEP_TIME = 25L
 
     @Before
     public void setup() {
@@ -25,7 +26,7 @@ class StatsdServiceIntegrationTests extends GroovyTestCase {
     @Test
     public void testIncrement() {
         statsdService.increment('key', 5, 1.0)
-        Thread.sleep(5)
+        Thread.sleep(SLEEP_TIME)
         assert server.messages.size() == 1
         assert server.messages[0] == "key:5|c"
     }
@@ -33,7 +34,7 @@ class StatsdServiceIntegrationTests extends GroovyTestCase {
     @Test
     public void testTiming() {
         statsdService.timing('key2', 42, 1.0)
-        Thread.sleep(5)
+        Thread.sleep(SLEEP_TIME)
         assert server.messages.size() == 1
         assert server.messages[0] == "key2:42|ms"
     }
