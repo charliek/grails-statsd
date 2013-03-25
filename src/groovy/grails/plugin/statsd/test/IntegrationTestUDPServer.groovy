@@ -6,25 +6,43 @@ package grails.plugin.statsd.test
  */
 class IntegrationTestUDPServer {
 
-    def messages = []
-    DatagramSocket serverSocket
-    volatile boolean stop = false
+    private static final long SLEEP_TIME = 50L
+    private List<String> _messages = []
+    private DatagramSocket serverSocket
+    private volatile boolean stop = false
 
     def start() {
+        try {
+            InetAddress address = InetAddress.getByName('127.0.0.1')
+            serverSocket = new DatagramSocket(8125, address)
+        } catch (Exception e) {
+            e.printStackTrace()
+            throw e
+        }
+
+        Thread.sleep(SLEEP_TIME)
         Thread.start {
-            serverSocket = new DatagramSocket(8125);
-            byte[] receiveData = new byte[1024];
+            byte[] receiveData = new byte[1024]
             while (!stop) {
-                DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
-                serverSocket.receive(receivePacket);
-                String sentence = new String(receivePacket.getData(), receivePacket.offset, receivePacket.length, "utf-8");
-                messages << sentence
+                DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length)
+                serverSocket.receive(receivePacket)
+                try {
+                    String message = new String(receivePacket.getData(), receivePacket.offset, receivePacket.length, "utf-8")
+                    _messages << message
+                } catch (Exception e) {
+                    e.printStackTrace()
+                }
             }
         }
+    }
+
+    List<String> getMessages() {
+        return _messages
     }
 
     def stop() {
         stop = true
         serverSocket.close()
+        Thread.sleep(SLEEP_TIME)
     }
 }

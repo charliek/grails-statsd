@@ -2,6 +2,8 @@ package grails.plugin.statsd
 
 class StatsdService {
 
+    static transactional = false
+
     def statsdPool
     def statsdTimingService
 
