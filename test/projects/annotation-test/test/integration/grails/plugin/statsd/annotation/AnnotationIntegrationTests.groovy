@@ -8,7 +8,7 @@ import grails.plugin.statsd.StatsdTimingService
 
 class AnnotationIntegrationTests extends GroovyTestCase {
 
-    private static final long SLEEP_TIME = 25L
+    private static final long SLEEP_TIME = 200L
     def statsdService
     IntegrationTestUDPServer server
     def yourBasicService

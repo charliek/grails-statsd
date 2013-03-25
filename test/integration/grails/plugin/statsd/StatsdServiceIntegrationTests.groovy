@@ -10,7 +10,7 @@ class StatsdServiceIntegrationTests extends GroovyTestCase {
 
     def statsdService
     IntegrationTestUDPServer server
-    private static final long SLEEP_TIME = 25L
+    private static final long SLEEP_TIME = 200L
 
     @Before
     public void setup() {

@@ -6,7 +6,7 @@ package grails.plugin.statsd.test
  */
 class IntegrationTestUDPServer {
 
-    private static final long SLEEP_TIME = 50L
+    private static final long SLEEP_TIME = 200L
     private List<String> _messages = []
     private DatagramSocket serverSocket
     private volatile boolean stop = false
