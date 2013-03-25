@@ -6,6 +6,8 @@ import grails.plugin.statsd.StatsdCounter
 
 class YourBasicService {
 
+    static transactional = false
+
     private int x = 42
 
     public int methodWithCounterAndAnnotationParamsProxy(int y, int z) {

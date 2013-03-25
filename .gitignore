@@ -5,6 +5,9 @@
 .project
 .classpath
 
+.idea
+*.zip
+*.zip.sha1
 *Db.properties
 *Db.script
 .settings

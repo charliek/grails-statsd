@@ -1,3 +1,5 @@
+[![Build Status](https://drone.io/github.com/charliek/grails-statsd/status.png)](https://drone.io/github.com/charliek/grails-statsd/latest)
+
 Grails Statsd Plugin
 =============
 
