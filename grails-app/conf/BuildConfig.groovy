@@ -14,7 +14,7 @@ grails.project.dependency.resolution = {
     repositories {
         grailsCentral()
         mavenCentral()
-        //mavenLocal()
+        mavenLocal()
         //mavenRepo "http://repository.codehaus.org"
     }
     dependencies {
@@ -23,7 +23,8 @@ grails.project.dependency.resolution = {
     }
 
     plugins {
-        build(":tomcat:$grailsVersion", ":release:1.0.0") {
+        build ":release:2.2.1"
+        build(":tomcat:$grailsVersion") {
             export = false
         }
     }
