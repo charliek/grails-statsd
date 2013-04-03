@@ -69,4 +69,15 @@ class StatsdService {
         }
     }
 
+    public void gauge(String key, double magnitude){
+        gauge(key, magnitude, 1.0);
+    }
+
+    public void gauge(String key, double magnitude, double sampleRate){
+        String stat = String.format("%s:%s|g", key, magnitude);
+        withClient { client ->
+            client.send(sampleRate, stat);
+        }
+    }
+
 }

@@ -38,4 +38,12 @@ class StatsdServiceIntegrationTests extends GroovyTestCase {
         assert server.messages.size() == 1
         assert server.messages[0] == "key2:42|ms"
     }
+
+    @Test
+    public void testGauge() {
+        statsdService.gauge('key3', 13, 1.0)
+        Thread.sleep(SLEEP_TIME)
+        assert server.messages.size() == 1
+        assert server.messages[0] == "key3:13.0|g"
+    }
 }
