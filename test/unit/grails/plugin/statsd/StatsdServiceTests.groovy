@@ -146,4 +146,25 @@ class StatsdServiceTests extends GMockTestCase {
             service.increment(metric, magnitude, sampling)
         }
     }
+
+    @Test
+    public void testGaugeWithDefaultSampling() {
+        String metric = 'rumble'
+        int magnitude = 7
+        client.send(1.0, "${metric}:7.0|g")
+        runTestWithPool {
+            service.gauge(metric, magnitude)
+        }
+    }
+
+    @Test
+    public void testGauge() {
+        String metric = 'kingsroad'
+        int magnitude = 11
+        double sampling = 1.3
+        client.send(sampling, "${metric}:11.0|g")
+        runTestWithPool {
+            service.gauge(metric, magnitude, sampling)
+        }
+    }
 }
