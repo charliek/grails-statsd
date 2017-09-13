@@ -55,7 +55,7 @@ Counters are used to count the number of times something happens and report on i
 
 Timers are used to record how long something took. Generally you will probably want to use the closure method to call timers, but there is also functions to specify times directly if desired. Timers also take in a metric name, and can have a second sampling rate parameter.
 
-    def allBooks = service.withTimer('dbquery.books') {
+    def allBooks = statsdService.withTimer('dbquery.books') {
         Books.list()
     }
 
